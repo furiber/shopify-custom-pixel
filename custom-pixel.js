@@ -1,9 +1,14 @@
 // ============================================
+// Shopify Custom Pixel for Server-Side GTM
+// ============================================
+// Complete e-commerce tracking solution that routes all GA4 data through sGTM
+// Maintains session continuity and prevents sandbox URL pollution
+//
 // CONFIGURATION - UPDATE THESE VALUES
 // ============================================
 const SETTINGS = {
-  measurementId: 'G-PNYJZGH4F3',           // Your GA4 Measurement ID
-  serverContainerUrl: 'https://analytics.aa.co.nz',  // Your sGTM endpoint
+  measurementId: 'G-XXXXXXXXXX',           // Your GA4 Measurement ID
+  serverContainerUrl: 'https://your-sgtm-endpoint.com',  // Your sGTM endpoint
   debug: true,                              // Set false for production
   
   // Event toggles
@@ -78,10 +83,10 @@ function buildItems(lineItems, listName = null) {
     
     return {
       item_id: product.id?.toString()?.replace('gid://shopify/Product/', '') || merchandise?.sku,
-      item_name: item.title || product.title || merchandise?.title,
+      item_name: product.title || merchandise?.product?.title,
       item_brand: product.vendor,
       item_category: product.type,
-      item_variant: merchandise?.title !== product.title ? merchandise?.title : undefined,
+      item_variant: merchandise?.title,
       price: formatMoney(merchandise?.price?.amount || item.variant?.price?.amount),
       quantity: item.quantity || 1,
       index: index,
@@ -173,7 +178,7 @@ if (SETTINGS.trackEcommerce) {
         item_name: product?.title,
         item_brand: product?.vendor,
         item_category: product?.type,
-        item_variant: variant?.title !== product?.title ? variant?.title : undefined,
+        item_variant: variant?.title,
         price: formatMoney(variant?.price?.amount),
         quantity: 1
       }]
@@ -197,7 +202,7 @@ if (SETTINGS.trackEcommerce) {
         item_name: product?.title,
         item_brand: product?.vendor,
         item_category: product?.type,
-        item_variant: merchandise?.title !== product?.title ? merchandise?.title : undefined,
+        item_variant: merchandise?.title,
         price: formatMoney(merchandise?.price?.amount),
         quantity: cartLine?.quantity || 1
       }]
@@ -235,7 +240,7 @@ if (SETTINGS.trackEcommerce) {
         item_name: product?.title,
         item_brand: product?.vendor,
         item_category: product?.type,
-        item_variant: merchandise?.title !== product?.title ? merchandise?.title : undefined,
+        item_variant: merchandise?.title,
         price: formatMoney(merchandise?.price?.amount),
         quantity: cartLine?.quantity || 1
       }]
